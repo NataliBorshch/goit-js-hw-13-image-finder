@@ -4,20 +4,34 @@ import { refs } from './js/refs';
 import apiService from './js/apiService';
 
 import * as basicLightbox from 'basiclightbox';
+import '../node_modules/basiclightbox/dist/basicLightbox.min.css';
+
+import { alert } from '@pnotify/core';
+import '@pnotify/core/dist/PNotify.css';
+import '@pnotify/core/dist/BrightTheme.css';
 
 refs.form.addEventListener('submit', submitForm);
 
-async function submitForm(event) {
+function submitForm(event) {
   event.preventDefault();
   const value = refs.input.value;
   apiService.resetPage();
   clear();
-  apiService.getFetch(value, refs.listGallery);
-  refs.buttomMore.classList.remove('is-hidden');
-  refs.buttomMore.addEventListener('click', nexPage);
+  apiService
+    .getFetch(value, refs.listGallery)
+    .then(maxPage => {
+      showMore(maxPage);
+      refs.listGallery.addEventListener('click', event => {
+        const instance = basicLightbox.create(`
+     <img src="${event.target.src}" width="100%">`);
+        instance.show();
+      });
+    })
+    .catch(console.error);
 }
 
 function clear() {
+  refs.boxBtn.classList.add('is-hidden');
   return (refs.listGallery.innerHTML = '');
 }
 
@@ -30,4 +44,16 @@ function nexPage() {
     });
   }, 500);
   apiService.getFetch(undefined, refs.listGallery);
+}
+
+function showMore(number) {
+  if (number > 1) {
+    refs.boxBtn.classList.remove('is-hidden');
+    refs.buttomMore.addEventListener('click', nexPage);
+  }
+  if (number <= 1) {
+    alert({
+      text: 'These are all the pictures you requested!',
+    });
+  }
 }
