@@ -1,0 +1,60 @@
+body {
+  background-color: black;
+  color: white;
+  font-size: 20px;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -15px;
+  padding: 40px;
+  list-style: none;
+}
+.item-gallery {
+  margin: 15px;
+  width: calc((100% - 30px * 3) / 3);
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+input {
+  margin: 15px;
+  padding: 5px;
+  font-size: 15px;
+}
+button {
+  background-color: khaki;
+  font-size: 20px;
+  border-radius: 50%;
+
+  padding: 5px 20px;
+  border: 2px solid khaki;
+}
+
+.photo-card {
+  background-color: lightslategrey;
+}
+.stats-item {
+  border: 2px solid white;
+  padding: 2px;
+  margin: 0px;
+}
+img {
+  display: block;
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.is-hidden {
+  display: none;
+}
+.box-gallery {
+  text-align: center;
+}
