@@ -19,9 +19,8 @@ function submitForm(event) {
   clear();
   apiService
     .getFetch(value, refs.listGallery)
-    .then(total => {
-      const { stillItem, totalHits } = total;
-      showMore(stillItem, totalHits);
+    .then(data => {
+      showMore(data);
     })
     .catch(console.error);
 }
@@ -33,9 +32,8 @@ function clear() {
 
 function nexPage() {
   apiService.setPage();
-  apiService.getFetch(undefined, refs.listGallery).then(total => {
-    const { stillItem, totalHits } = total;
-    showMore(stillItem, totalHits);
+  apiService.getFetch(undefined, refs.listGallery).then(data => {
+    showMore(data);
     window.scrollTo({
       top: window.document.scrollingElement.scrollHeight,
       behavior: 'smooth',
@@ -43,8 +41,9 @@ function nexPage() {
   });
 }
 
-function showMore(still, total) {
-  const number = total - still;
+function showMore(data) {
+  const { stillItem, totalHits } = data;
+  const number = totalHits - stillItem;
   if (number > 0) {
     refs.boxBtn.classList.remove('is-hidden');
     refs.buttomMore.addEventListener('click', nexPage);
