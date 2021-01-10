@@ -19,12 +19,12 @@ export default {
     return fetch(url)
       .then(res => res.json())
       .then(data => {
-        const { hits, total } = data;
-        const maxPage = Math.ceil(total / this.perPage);
+        const { hits, totalHits } = data;
+        const stillItem = this.numberPage * this.perPage;
         const markup = galleryTemplates(hits);
         place.insertAdjacentHTML('beforeend', markup);
 
-        return maxPage;
+        return { stillItem, totalHits };
       });
   },
   setPage() {

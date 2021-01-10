@@ -19,17 +19,9 @@ function submitForm(event) {
   clear();
   apiService
     .getFetch(value, refs.listGallery)
-    .then(maxPage => {
-      showMore(maxPage);
-      refs.listGallery.addEventListener('click', event => {
-        if (event.target.nodeName !== 'IMG') {
-          return;
-        }
-        const originalImg = event.target.dataset.source;
-        const instance = basicLightbox.create(`
-     <img src="${originalImg}" width="cover">`);
-        instance.show();
-      });
+    .then(total => {
+      const { stillItem, totalHits } = total;
+      showMore(stillItem, totalHits);
     })
     .catch(console.error);
 }
@@ -41,23 +33,36 @@ function clear() {
 
 function nexPage() {
   apiService.setPage();
-  setTimeout(() => {
+  apiService.getFetch(undefined, refs.listGallery).then(total => {
+    const { stillItem, totalHits } = total;
+    showMore(stillItem, totalHits);
     window.scrollTo({
-      top: refs.listGallery.scrollHeight,
+      top: window.document.scrollingElement.scrollHeight,
       behavior: 'smooth',
     });
-  }, 500);
-  apiService.getFetch(undefined, refs.listGallery);
+  });
 }
 
-function showMore(number) {
-  if (number > 1) {
+function showMore(still, total) {
+  const number = total - still;
+  if (number > 0) {
     refs.boxBtn.classList.remove('is-hidden');
     refs.buttomMore.addEventListener('click', nexPage);
   }
-  if (number <= 1) {
+  if (number <= 0) {
     alert({
       text: 'These are all the pictures you requested!',
     });
+    refs.boxBtn.classList.add('is-hidden');
   }
 }
+
+refs.listGallery.addEventListener('click', event => {
+  if (event.target.nodeName !== 'IMG') {
+    return;
+  }
+  const originalImg = event.target.dataset.source;
+  const instance = basicLightbox.create(`
+     <img src="${originalImg}" width="cover">`);
+  instance.show();
+});
