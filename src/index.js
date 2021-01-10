@@ -22,8 +22,9 @@ function submitForm(event) {
     .then(maxPage => {
       showMore(maxPage);
       refs.listGallery.addEventListener('click', event => {
+        const originalImg = event.target.dataset.source;
         const instance = basicLightbox.create(`
-     <img src="${event.target.src}" width="100%">`);
+     <img src="${originalImg}" width="cover">`);
         instance.show();
       });
     })
